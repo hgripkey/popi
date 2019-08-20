@@ -1,4 +1,6 @@
 <!doctype html>
+
+
 <html lang="en">
   <head>
     <link rel="stylesheet" href="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/css/ol.css" type="text/css">
@@ -21,7 +23,7 @@
       #map_holder {
         display: grid;
         grid-template-columns: 25% auto;
-        grid-template-rows: minmax(600px,600px) minmax(350px, 350px);
+        grid-template-rows: minmax(600px,600px) minmax(250px, 250px);
         border-width: 2px;
         border-color: grey;
 	border-style: solid;
@@ -53,11 +55,11 @@
     </style>
     <!--Script include for OpenLayers -->
     <script src="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/build/ol.js"></script>
-    <title>OpenLayers example</title>
+    <title>OpenLayers Popi Test Page</title>
   </head>
   <body>
 
-    <h2 id="map_head">My Map</h2>
+    <h2 id="map_head">Sample Map Query</h2>
     <div id="map_holder">
 
       <div id="popup" style="font-size: small;"></div>
@@ -101,7 +103,7 @@ if ( isset($_POST['submits'])){
       <div id="map"></div>
 
     </div>
-    <div id="footer">Footer</div>
+    <div id="footer"></div>
 
     <script type="text/javascript">
 
