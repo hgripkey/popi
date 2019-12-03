@@ -13,7 +13,7 @@
         margin: none;
         grid-column: 2 / span 2;
 	grid-row: 1 / span 2;
-	
+
       }
       #map_head {
         margin: auto;
@@ -29,7 +29,7 @@
 	border-style: solid;
 	min-width: 0;
 	min-height: 0;
-	
+
       }
       #popup {
         grid-column: 1;
@@ -39,7 +39,7 @@
         border-style: solid;
 	overflow-y: scroll;
 	min-width: 0;
-		
+
       }
       #submission {
         grid-column: 1;
@@ -84,10 +84,10 @@
         divInfo.appendChild(table);
 
 	</script>
-      <div id="submission">	
-           
-          
-   <textarea name='samples' form='samplesform' rows='10' cols='15' style='width:95%;'><?php 
+      <div id="submission">
+
+
+   <textarea name='samples' form='samplesform' rows='10' cols='15' style='width:95%;'><?php
 if ( isset($_POST['submits'])){
 	$points = explode("\n", str_replace("\r", "", $_POST['samples']));
 	foreach ($points as $item) {
@@ -95,7 +95,7 @@ if ( isset($_POST['submits'])){
 	}
 }
 		?></textarea><br>
-         
+
 	  <form action="index.php" method="post" id="samplesform">
             <input type="submit" name="submits" value="submit">
 	  </form>
@@ -127,7 +127,7 @@ if ( isset($_POST['submits'])){
         })
       });
       //List of points, will need to modify this for specific samples, include ID and country at least
-           
+
         </script>
       <?php
       //Do the query here and create the markers
@@ -138,9 +138,9 @@ if ( isset($_POST['submits'])){
         if(!$dbconnection) {
           echo "Error: DataBase connection failed" . PHP_EOL;
         }
-        
+
 	if (isset($_POST['submits'])) {
-	  #Need to create a list of ? and 's' equal to the number of samples to prepare the statement and explode out the samples	
+	  #Need to create a list of ? and 's' equal to the number of samples to prepare the statement and explode out the samples
 	  $points = explode("\n", str_replace("\r", "", $_POST['samples']));
 	  $question_marks = str_repeat('?, ', count($points));
 	  $question_marks = preg_replace('/, $/', '', $question_marks);
@@ -157,33 +157,33 @@ if ( isset($_POST['submits'])){
 	  $numrows = $result->num_rows;
 	  //Loop through the results and add them to the object
 	  while ($row = $result->fetch_assoc()) {
-		  if (is_float($row['longitude'])  && is_float($row['latitude'])) {  
+		  if (is_float($row['longitude'])  && is_float($row['latitude'])) {
 	            echo "{lng: ".$row['longitude'].", lat: ".$row['latitude'].", id: '".htmlspecialchars($row['banked_sample_id'])."', collectionDate: '".$row['collection_date']."', village: '".addslashes($row['village'])."', country: '".htmlspecialchars($row['country'])."'}";
-       	 	    
+
            	 	if ($count != $numrows-1) {
              	 		echo ",";
 			}
 	  }else{console.log("No latitude or longitude for sample: ".$row['banked_sample_id']);}
-		$count = $count + 1;  
+		$count = $count + 1;
 		echo "\n";
           }
           echo "];";
           echo "</script>";
 	}
 
-     
+
       ?>
 
       <script type="text/javascript">
-           
 
-     
+
+
       let features = [];
       //For each marker add the point onto the vector layer point
       for(let i = 0; i<markers.length; i++){
-	      
+
 	let item = markers[i];
-	
+
         let id = item.id
 	let lng = item.lng;
         let lat = item.lat;
@@ -231,25 +231,25 @@ if ( isset($_POST['submits'])){
               source: vectorSource,
 	      declutter: true
       });
-      const vectorLayer2 = new ol.layer.Vector({
-        source: vectorSource
-      });
-      vectorLayer2.setOpacity(0);
+      //const vectorLayer2 = new ol.layer.Vector({
+      //  source: vectorSource
+      //});
+      //vectorLayer2.setOpacity(0);
       map.addLayer(vectorLayer);
-      map.addLayer(vectorLayer2);
+      //map.addLayer(vectorLayer2);
 
       //Set a pixel array to allow default values
       let highlightedFeatures = [];
-      
+
       //Map onclick function to select points
       map.on('click',function(e) {
 
-	//Set variable to contain the information div and remove previous information     
+	//Set variable to contain the information div and remove previous information
 	let divInfo = document.getElementById('popup');
 	while(divInfo.firstChild){
-	    divInfo.removeChild(divInfo.firstChild);	
+	    divInfo.removeChild(divInfo.firstChild);
 	}
-	
+
 	//Set the default style of all points previously in the array
         highlightedFeatures.forEach(f => f.setStyle(new ol.style.Style({
             stroke: new ol.style.Stroke({
@@ -271,7 +271,7 @@ if ( isset($_POST['submits'])){
 	table.setAttribute('border','1');
 	table.setAttribute('width','100%');
 	table.style.borderCollapse = 'collapse';
-	let rowCount = 0; 		//Row increment 	
+	let rowCount = 0; 		//Row increment
 	let row = table.insertRow(0);
 
 	//Create the header for the table
@@ -282,13 +282,13 @@ if ( isset($_POST['submits'])){
 	  cell.setAttribute('align','center');
 	  cell.style.fontWeight = 'bold';
 	  cell.appendChild(text);
-	  
+
 	}
 	rowCount++; //Increment row
-        
+
 	//Iterate through each element clicked at the pixel, style and add rows to table
 	map.forEachFeatureAtPixel(e.pixel, f => {
-        
+
           f.setStyle(new ol.style.Style({
             stroke: new ol.style.Stroke({
               color: '#0d47a1',
@@ -317,7 +317,7 @@ if ( isset($_POST['submits'])){
               anchor.innerText = varArray[0];
 	      cell.appendChild(anchor);
 	    }else {
-	     let text = document.createTextNode(varArray[i]);	    
+	     let text = document.createTextNode(varArray[i]);
 	     cell.appendChild(text);
 	    }
 	  }
@@ -328,7 +328,7 @@ if ( isset($_POST['submits'])){
 	else if (rowCount === 51){
 	   let row = table.insertRow(rowCount);
            let cell = row.insertCell(0);
-           cell.setAttribute('align','center'); 
+           cell.setAttribute('align','center');
 	   let text = document.createTextNode("<50 samples present. List truncated");
 	   cell.appendChild(text);
 
