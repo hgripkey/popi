@@ -228,15 +228,15 @@ if ( isset($_POST['submits'])){
       });
 
       const vectorLayer = new ol.layer.Vector({
-              source: vectorSource,
+        source: vectorSource,
 	      declutter: true
       });
-      //const vectorLayer2 = new ol.layer.Vector({
-      //  source: vectorSource
-      //});
-      //vectorLayer2.setOpacity(0);
+      const vectorLayer2 = new ol.layer.Vector({
+        source: vectorSource
+      });
+      vectorLayer2.setOpacity(0);
       map.addLayer(vectorLayer);
-      //map.addLayer(vectorLayer2);
+      map.addLayer(vectorLayer2);
 
       //Set a pixel array to allow default values
       let highlightedFeatures = [];
@@ -288,7 +288,7 @@ if ( isset($_POST['submits'])){
 
 	//Iterate through each element clicked at the pixel, style and add rows to table
 	map.forEachFeatureAtPixel(e.pixel, f => {
-
+          console.log(f.get('opacity'));
           f.setStyle(new ol.style.Style({
             stroke: new ol.style.Stroke({
               color: '#0d47a1',
