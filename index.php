@@ -13,7 +13,7 @@
         margin: none;
         grid-column: 2 / span 2;
 	grid-row: 1 / span 2;
-	
+
       }
       #map_head {
         margin: auto;
@@ -29,7 +29,7 @@
 	border-style: solid;
 	min-width: 0;
 	min-height: 0;
-	
+
       }
       #popup {
         grid-column: 1;
@@ -39,7 +39,7 @@
         border-style: solid;
 	overflow-y: scroll;
 	min-width: 0;
-		
+
       }
       #submission {
         grid-column: 1;
@@ -84,10 +84,10 @@
         divInfo.appendChild(table);
 
 	</script>
-      <div id="submission">	
-           
-          
-   <textarea name='samples' form='samplesform' rows='10' cols='15' style='width:95%;'><?php 
+      <div id="submission">
+
+
+   <textarea name='samples' form='samplesform' rows='10' cols='15' style='width:95%;'><?php
 if ( isset($_POST['submits'])){
 	$points = explode("\n", str_replace("\r", "", $_POST['samples']));
 	foreach ($points as $item) {
@@ -95,7 +95,7 @@ if ( isset($_POST['submits'])){
 	}
 }
 		?></textarea><br>
-         
+
 	  <form action="index.php" method="post" id="samplesform">
             <input type="submit" name="submits" value="submit">
 	  </form>
@@ -106,9 +106,6 @@ if ( isset($_POST['submits'])){
     <div id="footer"></div>
 
     <script type="text/javascript">
-
-
-
 
       //Create a new map object
       const map = new ol.Map({
@@ -127,8 +124,8 @@ if ( isset($_POST['submits'])){
         })
       });
       //List of points, will need to modify this for specific samples, include ID and country at least
-           
-        </script>
+
+      </script>
       <?php
       //Do the query here and create the markers
 
@@ -138,69 +135,66 @@ if ( isset($_POST['submits'])){
         if(!$dbconnection) {
           echo "Error: DataBase connection failed" . PHP_EOL;
         }
-        
+
 	if (isset($_POST['submits'])) {
-	  #Need to create a list of ? and 's' equal to the number of samples to prepare the statement and explode out the samples	
+	  #Need to create a list of ? and 's' equal to the number of samples to prepare the statement and explode out the samples
 	  $points = explode("\n", str_replace("\r", "", $_POST['samples']));
 	  $question_marks = str_repeat('?, ', count($points));
 	  $question_marks = preg_replace('/, $/', '', $question_marks);
-          $types = str_repeat('s', count($points));
-          $stmt = $dbconnection->prepare("select Sample.banked_sample_id, Collection_site.latitude, Collection_site.longitude, Sample.collection_date, Collection_site.name as village, Collection_site.country from Sample LEFT JOIN Collection ON Collection.id = Sample.collection_id LEFT JOIN Collection_site ON Collection.village = Collection_site.id where Sample.banked_sample_id IN ($question_marks);");
-          $stmt->bind_param($types, ...$points);
-          $stmt->execute();
-          $result=$stmt->get_result();
+    $types = str_repeat('s', count($points));
+    $stmt = $dbconnection->prepare("select Sample.banked_sample_id, Collection_site.latitude, Collection_site.longitude, Sample.collection_date, Collection_site.name as village, Collection_site.country from Sample LEFT JOIN Collection ON Collection.id = Sample.collection_id LEFT JOIN Collection_site ON Collection.village = Collection_site.id where Sample.banked_sample_id IN ($question_marks);");
+    $stmt->bind_param($types, ...$points);
+    $stmt->execute();
+    $result=$stmt->get_result();
 
 	  //Create a javascript array of objects to hold query information
 	  echo "<script type='text/javascript'>";
-          echo "let markers = [";
-          $count = 0; //Count used to prevent comma at last entry
+    echo "let markers = [";
+    $count = 0; //Count used to prevent comma at last entry
 	  $numrows = $result->num_rows;
 	  //Loop through the results and add them to the object
 	  while ($row = $result->fetch_assoc()) {
-		  if (is_float($row['longitude'])  && is_float($row['latitude'])) {  
-	            echo "{lng: ".$row['longitude'].", lat: ".$row['latitude'].", id: '".htmlspecialchars($row['banked_sample_id'])."', collectionDate: '".$row['collection_date']."', village: '".addslashes($row['village'])."', country: '".htmlspecialchars($row['country'])."'}";
-       	 	    
-           	 	if ($count != $numrows-1) {
-             	 		echo ",";
-			}
-	  }else{console.log("No latitude or longitude for sample: ".$row['banked_sample_id']);}
-		$count = $count + 1;  
-		echo "\n";
-          }
-          echo "];";
-          echo "</script>";
+		  if (is_float($row['longitude'])  && is_float($row['latitude'])) {
+	         echo "{lng: ".$row['longitude'].", lat: ".$row['latitude'].", id: '".htmlspecialchars($row['banked_sample_id'])."', collectionDate: '".$row['collection_date']."', village: '".addslashes($row['village'])."', country: '".htmlspecialchars($row['country'])."'}";
+       	 	 if ($count != $numrows-1) {
+             	echo ",";
+			     }
+	    } else{console.log("No latitude or longitude for sample: ".$row['banked_sample_id']);}
+		  $count = $count + 1;
+		  echo "\n";
+    }
+    echo "];";
+    echo "</script>";
 	}
 
-     
+
       ?>
 
       <script type="text/javascript">
-           
 
-     
+
+
       let features = [];
       //For each marker add the point onto the vector layer point
       for(let i = 0; i<markers.length; i++){
-	      
-	let item = markers[i];
-	
-        let id = item.id
-	let lng = item.lng;
-        let lat = item.lat;
-	let village = item.village;
-	let country = item.country;
-	let collectionDate = item.collectionDate;
 
+	      let item = markers[i];
+        let id = item.id
+      	let lng = item.lng;
+        let lat = item.lat;
+      	let village = item.village;
+      	let country = item.country;
+      	let collectionDate = item.collectionDate;
         let iconFeature = new ol.Feature({
           geometry: new ol.geom.Point(ol.proj.transform([lng, lat],  'EPSG:4326', 'EPSG:3857'))
-	});
-	//Set Key value pairs to hold printing information
-	iconFeature.set('SampleId',id);
-	iconFeature.set('lat',lat);
-	iconFeature.set('lng',lng);
-	iconFeature.set('village',village);
-	iconFeature.set('country',country);
-	iconFeature.set('collectionDate',collectionDate);
+	      });
+      	//Set Key value pairs to hold printing information
+      	iconFeature.set('SampleId',id);
+      	iconFeature.set('lat',lat);
+      	iconFeature.set('lng',lng);
+      	iconFeature.set('village',village);
+      	iconFeature.set('country',country);
+      	iconFeature.set('collectionDate',collectionDate);
         //let iconStyle = new ol.style.Style({
         //  image: new ol.style.Icon(({
         //    src: "http://cdn.mapmarker.io/api/v1/pin?text=P&size=50&hoffset=1"
@@ -209,6 +203,7 @@ if ( isset($_POST['submits'])){
         //iconFeature.setStyle(iconStyle);
         features.push(iconFeature);
       }
+
       const vectorSource = new ol.source.Vector({
         features: features
       });
@@ -216,47 +211,48 @@ if ( isset($_POST['submits'])){
       const vectorLayer = new ol.layer.Vector({
           source: vectorSource
       });
+
       map.addLayer(vectorLayer);
 
       //Set a pixel array to allow default values
       let highlightedFeatures = [];
-      
+
       //Map onclick function to select points
       map.on('click',function(e) {
 
-	//Set variable to contain the information div and remove previous information     
-	let divInfo = document.getElementById('popup');
-	while(divInfo.firstChild){
-	    divInfo.removeChild(divInfo.firstChild);	
-	}
-	
-	//Set the default style of all points previously in the array
+      	//Set variable to contain the information div and remove previous information
+      	let divInfo = document.getElementById('popup');
+      	while(divInfo.firstChild){
+    	    divInfo.removeChild(divInfo.firstChild);
+    	  }
+
+	      //Set the default style of all points previously in the array
         highlightedFeatures.forEach(f => f.setStyle(null));
-	highlightedFeatures = [];
+	      highlightedFeatures = [];
 
-	//Create the information table element
-	let table = document.createElement('table');
-	table.setAttribute('border','1');
-	table.setAttribute('width','100%');
-	table.style.borderCollapse = 'collapse';
-	let rowCount = 0; 		//Row increment 	
-	let row = table.insertRow(0);
+      	//Create the information table element
+      	let table = document.createElement('table');
+      	table.setAttribute('border','1');
+      	table.setAttribute('width','100%');
+      	table.style.borderCollapse = 'collapse';
+      	let rowCount = 0; 		//Row increment
+      	let row = table.insertRow(0);
 
-	//Create the header for the table
-	let headers = ['SampleID','Latitude','Longitude','Village/City','Country','Collection Date'];
-	for (let i=0;i<6;i++) {
-	  let cell = row.insertCell(i);
+      	//Create the header for the table
+      	let headers = ['SampleID','Latitude','Longitude','Village/City','Country','Collection Date'];
+      	for (let i=0;i<6;i++) {
+      	  let cell = row.insertCell(i);
           let text = document.createTextNode(headers[i]);
-	  cell.setAttribute('align','center');
-	  cell.style.fontWeight = 'bold';
-	  cell.appendChild(text);
-	  
-	}
-	rowCount++; //Increment row
-        
-	//Iterate through each element clicked at the pixel, style and add rows to table
-	map.forEachFeatureAtPixel(e.pixel, f => {
-        
+      	  cell.setAttribute('align','center');
+      	  cell.style.fontWeight = 'bold';
+      	  cell.appendChild(text);
+
+	      }
+	      rowCount++; //Increment row
+
+      	//Iterate through each element clicked at the pixel, style and add rows to table
+      	map.forEachFeatureAtPixel(e.pixel, f => {
+
           f.setStyle(new ol.style.Style({
             stroke: new ol.style.Stroke({
               color: '#0d47a1',
@@ -269,7 +265,7 @@ if ( isset($_POST['submits'])){
                 width: 2
               })
             })
-	}));
+      	  }));
 
           //Create the row for the table
 	  let row = table.insertRow(rowCount);
@@ -280,12 +276,12 @@ if ( isset($_POST['submits'])){
 	    //Create an achor tag if it is the first elemen (sample ID)
 	    if (i === 0){
               let anchor = document.createElement('a')
-              let url = "https://169.237.172.190/PopulationData/Workbench/DataViews/indiv2.php?banked_id="  + varArray[0];
+              let url = "https://popi.ucdavis.edu/PopulationData/Workbench/DataViews/indiv2.php?banked_id="  + varArray[0];
 	      anchor.setAttribute('href', "javascript:window.open('"+url+"', '"+varArray[0]+"','width=800,height=800')");
               anchor.innerText = varArray[0];
 	      cell.appendChild(anchor);
 	    }else {
-	     let text = document.createTextNode(varArray[i]);	    
+	     let text = document.createTextNode(varArray[i]);
 	     cell.appendChild(text);
 	    }
 	  }
