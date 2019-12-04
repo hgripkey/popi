@@ -311,8 +311,10 @@ if ( isset($_POST['submits'])){
                 width: 3
               })
             })
-    highlightedFeatures.push(f);        
-	}));}
+
+	}));
+  highlightedFeatures.push(f);
+}
 
   else {
         if( rowCount <= 50 ){
