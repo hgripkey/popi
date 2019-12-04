@@ -297,7 +297,8 @@ if ( isset($_POST['submits'])){
 
 	//Iterate through each element clicked at the pixel, style and add rows to table
 	map.forEachFeatureAtPixel(e.pixel, f => {
-   if (f.get('Hidden')){
+  //Set the style for all the visible elements then display the invisible elements
+   if (!f.get('Hidden')){
           f.setStyle(new ol.style.Style({
             stroke: new ol.style.Stroke({
               color: '#0d47a1',
@@ -310,7 +311,9 @@ if ( isset($_POST['submits'])){
                 width: 3
               })
             })
-	}));
+	}));}
+
+  else {
         if( rowCount <= 50 ){
           //Create the row for the table
 	  let row = table.insertRow(rowCount);
