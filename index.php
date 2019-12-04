@@ -244,7 +244,7 @@ if ( isset($_POST['submits'])){
           source: vectorSource
 
         });
-        vectorLayer2.setOpacity(0);
+        vectorLayer.setOpacity(0);
         map.addLayer(vectorLayer);
         map.addLayer(vectorLayer2);
 
