@@ -178,8 +178,8 @@ if ( isset($_POST['submits'])){
 
 
 
-      let features = [];
-      let features2 = [];
+      let featuresVis = [];
+      let featuresInvis = [];
       //For each marker add the point onto the vector layer point
       for(let i = 0; i<markers.length; i++){
 
@@ -191,28 +191,26 @@ if ( isset($_POST['submits'])){
       	let country = item.country;
       	let collectionDate = item.collectionDate;
 
-        let iconFeature = new ol.Feature({
+        let iconFeatureInvis = new ol.Feature({
           geometry: new ol.geom.Point(ol.proj.transform([lng, lat],  'EPSG:4326', 'EPSG:3857'))
       	});
-        let iconFeature2 = new ol.Feature({
+        let iconFeatureVis = new ol.Feature({
           geometry: new ol.geom.Point(ol.proj.transform([lng, lat],  'EPSG:4326', 'EPSG:3857'))
       	});
       	//Set Key value pairs to hold printing information
-        iconFeature2.set('hidden',true);
-
-      	iconFeature.set('SampleId',id);
-      	iconFeature.set('lat',lat);
-      	iconFeature.set('lng',lng);
-      	iconFeature.set('village',village);
-      	iconFeature.set('country',country);
-      	iconFeature.set('collectionDate',collectionDate);
+      	iconFeatureInvis.set('SampleId',id);
+      	iconFeatureInvis.set('lat',lat);
+      	iconFeatureInvis.set('lng',lng);
+      	iconFeatureInvis.set('village',village);
+      	iconFeatureInvis.set('country',country);
+      	iconFeatureInvis.set('collectionDate',collectionDate);
               //let iconStyle = new ol.style.Style({
               //  image: new ol.style.Icon(({
               //    src: "http://cdn.mapmarker.io/api/v1/pin?text=P&size=50&hoffset=1"
               //  }))
               //});
       	//iconFeature.setStyle(iconStyle);
-      	iconFeature2.setStyle(new ol.style.Style({
+      	iconFeatureVis.setStyle(new ol.style.Style({
                   stroke: new ol.style.Stroke({
                     color: '#FA3703',
                     width: 3
@@ -226,24 +224,22 @@ if ( isset($_POST['submits'])){
                   })
           }));
 
-              features.push(iconFeature);
-              features2.push(iconFeature2);
+              featuresVis.push(iconFeatureVis);
+              featuresInvis.push(iconFeatureInvis);
         }
-        const vectorSource = new ol.source.Vector({
-          features: features
+        const vectorSourceVis = new ol.source.Vector({
+          features: featuresVis
         });
-        const vectorSource2 = new ol.source.Vector({
-          features: features2
+        const vectorSourceInvis = new ol.source.Vector({
+          features: featuresInvis
         });
 
-        const vectorLayer = new ol.layer.Vector({
-            source: vectorSource2,
+        const vectorLayerVis = new ol.layer.Vector({
+            source: vectorSourceVis,
             declutter: true
         });
-        const vectorLayer2 = new ol.layer.Vector({
-          source: vectorSource
-
-
+        const vectorLayerInvis = new ol.layer.Vector({
+          source: vectorSourceInvis
         });
         vectorLayer.setOpacity(0);
         map.addLayer(vectorLayer);
