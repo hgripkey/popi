@@ -297,7 +297,7 @@ if ( isset($_POST['submits'])){
 
 	//Iterate through each element clicked at the pixel, style and add rows to table
 	map.forEachFeatureAtPixel(e.pixel, f => {
-   if (f.get('Hidden')){
+   if (f.get('Hidden'))
           f.setStyle(new ol.style.Style({
             stroke: new ol.style.Stroke({
               color: '#0d47a1',
@@ -352,12 +352,12 @@ if ( isset($_POST['submits'])){
 
 	  //push current points to previous points
           highlightedFeatures.push(f);
-	});
+	}});
 
 	//Append the table to the popup window
 	divInfo.appendChild(table);
 
-}});
+});
 
       //To get zoom level use map.getView().getZoom();
     </script>
