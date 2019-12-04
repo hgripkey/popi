@@ -179,91 +179,100 @@ if ( isset($_POST['submits'])){
 
 
       let features = [];
+      let features2 = [];
       //For each marker add the point onto the vector layer point
       for(let i = 0; i<markers.length; i++){
 
-	let item = markers[i];
-
+	      let item = markers[i];
         let id = item.id
-	let lng = item.lng;
+      	let lng = item.lng;
         let lat = item.lat;
-	let village = item.village;
-	let country = item.country;
-	let collectionDate = item.collectionDate;
+      	let village = item.village;
+      	let country = item.country;
+      	let collectionDate = item.collectionDate;
 
         let iconFeature = new ol.Feature({
           geometry: new ol.geom.Point(ol.proj.transform([lng, lat],  'EPSG:4326', 'EPSG:3857'))
-	});
-	//Set Key value pairs to hold printing information
-	iconFeature.set('SampleId',id);
-	iconFeature.set('lat',lat);
-	iconFeature.set('lng',lng);
-	iconFeature.set('village',village);
-	iconFeature.set('country',country);
-	iconFeature.set('collectionDate',collectionDate);
-        //let iconStyle = new ol.style.Style({
-        //  image: new ol.style.Icon(({
-        //    src: "http://cdn.mapmarker.io/api/v1/pin?text=P&size=50&hoffset=1"
-        //  }))
-        //});
-	//iconFeature.setStyle(iconStyle);
-	iconFeature.setStyle(new ol.style.Style({
-            stroke: new ol.style.Stroke({
-              color: '#FA3703',
-              width: 3
-            }),
-            image: new ol.style.Circle({
-              radius: 5,
-              stroke: new ol.style.Stroke({
-                color: '#FA3703',
-                width: 3
-              })
-            })
-        }));
+      	});
+        let iconFeature2 = new ol.Feature({
+          geometry: new ol.geom.Point(ol.proj.transform([lng, lat],  'EPSG:4326', 'EPSG:3857'))
+      	});
+      	//Set Key value pairs to hold printing information
+        iconFeature2.set('hidden',true);
 
-        features.push(iconFeature);
-      }
-      const vectorSource = new ol.source.Vector({
-        features: features
-      });
+      	iconFeature.set('SampleId',id);
+      	iconFeature.set('lat',lat);
+      	iconFeature.set('lng',lng);
+      	iconFeature.set('village',village);
+      	iconFeature.set('country',country);
+      	iconFeature.set('collectionDate',collectionDate);
+              //let iconStyle = new ol.style.Style({
+              //  image: new ol.style.Icon(({
+              //    src: "http://cdn.mapmarker.io/api/v1/pin?text=P&size=50&hoffset=1"
+              //  }))
+              //});
+      	//iconFeature.setStyle(iconStyle);
+      	iconFeature.setStyle(new ol.style.Style({
+                  stroke: new ol.style.Stroke({
+                    color: '#FA3703',
+                    width: 3
+                  }),
+                  image: new ol.style.Circle({
+                    radius: 5,
+                    stroke: new ol.style.Stroke({
+                      color: '#FA3703',
+                      width: 3
+                    })
+                  })
+          }));
 
-      const vectorLayer = new ol.layer.Vector({
-        source: vectorSource,
-	      declutter: true
-      });
-      const vectorLayer2 = new ol.layer.Vector({
-        source: vectorSource
-      });
-      vectorLayer2.setOpacity(0);
-      map.addLayer(vectorLayer);
-      map.addLayer(vectorLayer2);
+              features.push(iconFeature);
+              features2.push(iconFeature2);
+        }
+        const vectorSource = new ol.source.Vector({
+          features: features
+        });
+        const vectorSource2 = new ol.source.Vector({
+          features: features2
+        });
 
-      //Set a pixel array to allow default values
-      let highlightedFeatures = [];
+        const vectorLayer = new ol.layer.Vector({
+            source: vectorSource
+        });
+        const vectorLayer2 = new ol.layer.Vector({
+          source: vectorSource2,
+          declutter: true
+        });
+        vectorLayer2.setOpacity(0);
+        map.addLayer(vectorLayer);
+        map.addLayer(vectorLayer2);
 
-      //Map onclick function to select points
-      map.on('click',function(e) {
+        //Set a pixel array to allow default values
+        let highlightedFeatures = [];
 
-	//Set variable to contain the information div and remove previous information
-	let divInfo = document.getElementById('popup');
-	while(divInfo.firstChild){
-	    divInfo.removeChild(divInfo.firstChild);
-	}
+        //Map onclick function to select points
+        map.on('click',function(e) {
 
-	//Set the default style of all points previously in the array
-        highlightedFeatures.forEach(f => f.setStyle(new ol.style.Style({
-            stroke: new ol.style.Stroke({
-              color: '#FA3703',
-              width: 3
-            }),
-            image: new ol.style.Circle({
-              radius: 5,
-              stroke: new ol.style.Stroke({
-                color: '#FA3703',
-                width: 3
-              })
-            })
-        })));
+      	//Set variable to contain the information div and remove previous information
+      	let divInfo = document.getElementById('popup');
+      	while(divInfo.firstChild){
+      	    divInfo.removeChild(divInfo.firstChild);
+      	}
+
+      	//Set the default style of all points previously in the array
+              highlightedFeatures.forEach(f => f.setStyle(new ol.style.Style({
+                  stroke: new ol.style.Stroke({
+                    color: '#FA3703',
+                    width: 3
+                  }),
+                  image: new ol.style.Circle({
+                    radius: 5,
+                    stroke: new ol.style.Stroke({
+                      color: '#FA3703',
+                      width: 3
+                    })
+                  })
+              })));
 	highlightedFeatures = [];
 
 	//Create the information table element
