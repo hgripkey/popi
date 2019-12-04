@@ -241,9 +241,9 @@ if ( isset($_POST['submits'])){
         const vectorLayerInvis = new ol.layer.Vector({
           source: vectorSourceInvis
         });
-        vectorLayer.setOpacity(0);
-        map.addLayer(vectorLayer);
-        map.addLayer(vectorLayer2);
+        vectorLayerInvis.setOpacity(0);
+        map.addLayer(vectorLayerVis);
+        map.addLayer(vectorLayerInvis);
 
         //Set a pixel array to allow default values
         let highlightedFeatures = [];
