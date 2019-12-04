@@ -198,6 +198,8 @@ if ( isset($_POST['submits'])){
           geometry: new ol.geom.Point(ol.proj.transform([lng, lat],  'EPSG:4326', 'EPSG:3857'))
       	});
       	//Set Key value pairs to hold printing information
+        iconFeatureVis.set('Hidden',false);
+        iconFeatureInvis.set('Hidden',true);
       	iconFeatureInvis.set('SampleId',id);
       	iconFeatureInvis.set('lat',lat);
       	iconFeatureInvis.set('lng',lng);
@@ -295,7 +297,7 @@ if ( isset($_POST['submits'])){
 
 	//Iterate through each element clicked at the pixel, style and add rows to table
 	map.forEachFeatureAtPixel(e.pixel, f => {
-          console.log(f.getKeys());
+   if (f.get('Hidden')){
           f.setStyle(new ol.style.Style({
             stroke: new ol.style.Stroke({
               color: '#0d47a1',
@@ -355,7 +357,7 @@ if ( isset($_POST['submits'])){
 	//Append the table to the popup window
 	divInfo.appendChild(table);
 
-      });
+}});
 
       //To get zoom level use map.getView().getZoom();
     </script>
