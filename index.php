@@ -311,6 +311,7 @@ if ( isset($_POST['submits'])){
                 width: 3
               })
             })
+    highlightedFeatures.push(f);        
 	}));}
 
   else {
@@ -354,7 +355,7 @@ if ( isset($_POST['submits'])){
 	  rowCount++;
 
 	  //push current points to previous points
-          highlightedFeatures.push(f);
+
 	}});
 
 	//Append the table to the popup window
