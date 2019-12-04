@@ -297,7 +297,7 @@ if ( isset($_POST['submits'])){
 
 	//Iterate through each element clicked at the pixel, style and add rows to table
 	map.forEachFeatureAtPixel(e.pixel, f => {
-   if (f.get('Hidden'))
+   if (f.get('Hidden')){
           f.setStyle(new ol.style.Style({
             stroke: new ol.style.Stroke({
               color: '#0d47a1',
