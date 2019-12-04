@@ -212,7 +212,7 @@ if ( isset($_POST['submits'])){
               //  }))
               //});
       	//iconFeature.setStyle(iconStyle);
-      	iconFeature.setStyle(new ol.style.Style({
+      	iconFeature2.setStyle(new ol.style.Style({
                   stroke: new ol.style.Stroke({
                     color: '#FA3703',
                     width: 3
@@ -242,6 +242,7 @@ if ( isset($_POST['submits'])){
         });
         const vectorLayer2 = new ol.layer.Vector({
           source: vectorSource
+
 
         });
         vectorLayer.setOpacity(0);
