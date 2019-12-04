@@ -237,11 +237,12 @@ if ( isset($_POST['submits'])){
         });
 
         const vectorLayer = new ol.layer.Vector({
-            source: vectorSource
+            source: vectorSource2,
+            declutter: true
         });
         const vectorLayer2 = new ol.layer.Vector({
-          source: vectorSource2,
-          declutter: true
+          source: vectorSource
+
         });
         vectorLayer2.setOpacity(0);
         map.addLayer(vectorLayer);
